@@ -112,18 +112,18 @@ These visualizations help highlight operational patterns and potential inefficie
 
 ## 3. Repository Structure
 
-\`\`\`
+```
 littlesteps-visit-analysis/
-
-data/
-    visits.csv
-
-notebooks/
-    littlesteps_analysis.ipynb
-
-requirements.txt
-README.md
-\`\`\`
+│
+├── data/
+│   └── visits.csv
+│
+├── notebooks/
+│   └── littlesteps_analysis.ipynb
+│
+├── requirements.txt
+└── README.md
+```
 
 ---
 
