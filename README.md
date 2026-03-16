@@ -2,110 +2,151 @@
 
 ## 1. Project Overview
 
-This project analyzes nurse visit operations for **LittleSteps**, an at-home healthcare provider.  
-The objective of this analysis is to identify patterns in **patient visit durations and nurse travel times** in order to improve operational efficiency.
+This project analyzes nurse visit operations for **LittleSteps**, an at-home healthcare provider. The objective is to identify patterns in **patient visit duration and nurse travel time** to uncover opportunities for operational improvement.
 
-The analysis focuses on:
+The analysis explores how visit duration varies across **service types, geographic locations, and clinical contexts** extracted from nurse notes.
 
-- Understanding visit duration across service types
+Key goals include:
+
+- Understanding visit duration patterns across services
 - Investigating geographic variation in visit times
-- Estimating travel time between visits
-- Extracting insights from nurse notes
-- Identifying potential operational improvements
+- Estimating travel time between consecutive nurse visits
+- Extracting insights from nurse notes using NLP classification
+- Identifying potential operational improvements for scheduling and routing
 
-The analysis was conducted using **Python, statistical testing, and data visualization techniques**.
+The analysis was conducted using **Python, statistical analysis, and data visualization techniques**.
 
 ---
 
 ## 2. Analytical Approach
 
-The project follows a structured data analytics workflow.
+The project follows a structured **data analytics workflow** including data cleaning, feature engineering, statistical analysis, and visualization.
 
 ### Data Preparation
 
-The dataset was first cleaned and standardized to ensure reliable analysis.
+The dataset was cleaned and standardized to ensure reliable analysis.
 
-Key steps included:
+Key preprocessing steps included:
 
 - Loading and exploring the dataset
 - Handling missing values
 - Removing duplicate records
+- Converting timestamp variables to datetime format
 - Standardizing categorical variables
-- Converting timestamp fields
-- Extracting information from nurse notes
+- Preparing nurse notes for NLP classification
 
 ### Feature Engineering
 
-Two key operational metrics were created:
+Two operational metrics were created to support analysis.
 
-**visit_duration_minutes**
+#### Visit Duration
 
-Calculated as the difference between visit start and end times.
+`visit_duration_minutes` was calculated as the difference between visit start and visit end timestamps.
 
-**travel_duration_minutes**
+#### Travel Duration
 
-Estimated as the time gap between consecutive visits performed by the same nurse.
+`travel_duration_minutes` was estimated as the time gap between **consecutive visits performed by the same nurse**.
 
 To improve accuracy:
 
 - Negative travel durations were removed
-- Travel durations were restricted to visits occurring on the same day
+- Travel durations were restricted to visits occurring **on the same day**
+
+---
+
+### Nurse Notes Classification
+
+Nurse notes were analyzed using **zero-shot text classification** with the Hugging Face model:
+
+`facebook/bart-large-mnli`
+
+The classifier assigns one or more clinical labels to each note, including:
+
+- follow-up needed
+- review required
+- wound care
+- medication administration
+- monitoring or assessment
+- mobility or rehabilitation
+- urgent or critical care
+- vital signs check
+- pain management
+- stable condition
+- patient condition update
+
+This allows visit durations to be analyzed in relation to **clinical context**.
+
+---
 
 ### Statistical Analysis
 
-The analysis evaluates operational patterns using:
+Operational patterns were evaluated using:
 
-- Descriptive statistics
-- Group comparisons
-- Statistical hypothesis testing
+- descriptive statistics
+- group comparisons
+- non-parametric hypothesis testing
 
-Statistical tests used:
+Because visit duration distributions were **skewed and non-normal**, non-parametric tests were used.
 
-- **Shapiro-Wilk test** to check normality
-- **Kruskal-Wallis test** to compare visit duration across locations
-- **Dunn post-hoc test** for pairwise comparisons
+Statistical tests included:
+
+- **Shapiro-Wilk test** to assess normality
+- **Kruskal-Wallis test** to compare visit durations across locations
+- **Dunn post-hoc test** for pairwise comparisons between locations
+
+---
 
 ### Data Visualization
 
-Visualizations created include:
+Several visualizations were used to explore patterns in the data, including:
 
 - Histograms of visit duration
-- Bar charts for service type comparison
-- Boxplots for location comparison
+- Bar charts comparing service types
+- Boxplots showing geographic variation
 - Nurse travel time comparisons
 - Nurse note category analysis
+
+These visualizations help highlight operational patterns and potential inefficiencies.
 
 ---
 
 ## 3. Repository Structure
 
+\`\`\`
 littlesteps-visit-analysis/
 
-data/  
-    visits.csv  
+data/
+    visits.csv
 
-notebooks/  
-    littlesteps_analysis.ipynb  
+notebooks/
+    littlesteps_analysis.ipynb
 
-requirements.txt  
-README.md  
+requirements.txt
+README.md
+\`\`\`
 
 ---
 
 ## 4. Environment Setup
 
-### Clone the repository
+### Clone the Repository
 
-git clone https://github.com/67KaylaDo/littlesteps-visit-analysis.git  
+\`\`\`bash
+git clone https://github.com/67KaylaDo/littlesteps-visit-analysis.git
 cd littlesteps-visit-analysis
+\`\`\`
 
-### Install dependencies
+### Install Dependencies
 
+\`\`\`bash
 pip install -r requirements.txt
+\`\`\`
 
-### Run the notebook
+### Run the Notebook
 
+\`\`\`bash
 jupyter notebook notebooks/littlesteps_analysis.ipynb
+\`\`\`
 
 ---
 
@@ -115,38 +156,49 @@ jupyter notebook notebooks/littlesteps_analysis.ipynb
 
 Visit duration varies significantly across service types.
 
-- **Wound Care** visits require the longest time (~101 minutes)
-- **Medication Administration** visits average ~90 minutes
-- **Physical Therapy and General Check-ups** require shorter durations (~74–76 minutes)
+- **Wound care visits** have the longest average duration (~101 minutes)
+- **Medication administration visits** average approximately 90 minutes
+- **Physical therapy and general check-ups** have shorter durations (~74–76 minutes)
+
+These findings suggest that service complexity plays a major role in visit duration.
+
+---
 
 ### Geographic Variation
 
-Visit duration differs across locations.
+Visit duration differs across geographic service areas.
 
 - **North region** shows the longest average visit duration (~108 minutes)
 - **South region** follows (~91 minutes)
-- **East and West regions** show shorter visit durations (~72 minutes)
+- **East and West regions** show shorter average visit durations (~72 minutes)
 
-Statistical testing confirmed that visit duration distributions differ across locations.
+Statistical testing confirmed that **visit duration distributions differ significantly across locations**.
+
+Further analysis (such as post-hoc pairwise comparisons) helps identify **which specific locations differ from each other**.
+
+---
 
 ### Nurse Travel Patterns
 
-Travel time between visits varies significantly across nurses.
+Estimated travel time between visits varies across nurses.
 
 This suggests potential opportunities to improve:
 
 - geographic clustering of patient visits
 - nurse routing efficiency
-- scheduling balance
+- workload balancing
 
-### Nurse Notes Insights
+---
 
-Clinical context extracted from nurse notes reveals that:
+### Insights from Nurse Notes
 
-- wound care related visits are associated with longer visit durations
-- routine monitoring visits are shorter
+Clinical information extracted from nurse notes reveals that:
 
-These insights could be used to improve scheduling predictions.
+- **Wound care related visits** tend to have longer durations
+- **Routine monitoring visits** are typically shorter
+- **Follow-up and review related visits** show moderate durations
+
+These insights demonstrate that **clinical context is an important predictor of visit length**.
 
 ---
 
@@ -154,21 +206,25 @@ These insights could be used to improve scheduling predictions.
 
 Based on the analysis, several improvements could increase operational efficiency.
 
-**Optimize Nurse Routing**
+### Optimize Nurse Routing
 
-Cluster patient visits geographically to reduce travel time.
+Cluster patient visits geographically to reduce travel time and improve scheduling efficiency.
 
-**Adjust Scheduling Based on Service Complexity**
+### Adjust Scheduling Based on Service Complexity
 
-Allocate longer time slots for complex services such as wound care.
+Allocate longer time slots for services such as wound care or complex treatments.
 
-**Use Clinical Signals for Scheduling**
+### Use Clinical Signals for Scheduling
 
-Information extracted from nurse notes may help predict visit complexity.
+Information extracted from nurse notes could help **predict visit duration more accurately**.
 
-**Monitor Extreme Visit Durations**
+### Monitor Extreme Visit Durations
 
-Extremely long visits should be reviewed to identify operational inefficiencies.
+Outlier visits should be reviewed to identify:
+
+- documentation errors
+- operational delays
+- unusually complex cases
 
 ---
 
@@ -178,22 +234,34 @@ Several assumptions were required due to dataset limitations.
 
 ### Travel Duration Estimation
 
-Travel time was not directly recorded in the dataset.  
-It was approximated using the time gap between consecutive visits for the same nurse.
+Travel time was not directly recorded.  
+It was approximated using the **time gap between consecutive visits for the same nurse**.
 
-This value may include:
+This estimate may include:
 
 - travel time
 - scheduling gaps
-- administrative activities
+- administrative work
+
+---
 
 ### Non-Normal Data Distribution
 
-Visit duration data was skewed with extreme outliers, therefore **non-parametric statistical tests** were used instead of ANOVA.
+Visit duration data was **skewed and contained extreme values**, therefore **non-parametric statistical tests** were used instead of ANOVA.
+
+---
 
 ### Limited Contextual Variables
 
-Information such as patient severity, geographic distance, or detailed scheduling data was not available.
+Additional information such as:
+
+- patient severity
+- exact travel distance
+- nurse scheduling constraints
+
+was not available in the dataset.
+
+Including these variables could improve future analysis.
 
 ---
 
@@ -206,11 +274,14 @@ Matplotlib
 Seaborn  
 SciPy  
 scikit-posthocs  
+Hugging Face Transformers  
 Jupyter Notebook
 
 ---
 
 ## Author
 
-Tuệ Minh Đỗ  
+**Minh Do (Kayla)**
+
 LittleSteps Healthcare Visit Analysis Project
+
